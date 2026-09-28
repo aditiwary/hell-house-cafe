@@ -994,26 +994,15 @@ function initNavigation() {
 
   mobileToggle?.addEventListener('click', () => {
     if (navLinks) {
-      const isVisible = navLinks.style.display === 'flex';
-      navLinks.style.display = isVisible ? 'none' : 'flex';
-      if (!isVisible) {
-        navLinks.style.position = 'absolute';
-        navLinks.style.top = '100%';
-        navLinks.style.left = '0';
-        navLinks.style.width = '100%';
-        navLinks.style.flexDirection = 'column';
-        navLinks.style.background = 'rgba(10, 6, 10, 0.98)';
-        navLinks.style.padding = '1.5rem';
-        navLinks.style.borderBottom = '1px solid var(--border-glow)';
-      }
+      navLinks.classList.toggle('active');
     }
   });
 
   // Close mobile nav when clicking a link
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-      if (window.innerWidth <= 768 && navLinks) {
-        navLinks.style.display = 'none';
+      if (navLinks) {
+        navLinks.classList.remove('active');
       }
     });
   });
