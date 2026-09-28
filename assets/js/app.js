@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
   initPwaInstall();
   initEmberCanvas();
-  initCursorSpotlight();
+  initCustomCursor();
   initMenuSystem();
   initFlexTray();
   initReservationSystem();
@@ -176,30 +176,92 @@ function initEmberCanvas() {
 }
 
 /* ==========================================================================
-   2. CURSOR SPOTLIGHT TRACKING
+   2. HAUTE CUSTOM CURSOR & CURSOR SPOTLIGHT TRACKING
    ========================================================================== */
-function initCursorSpotlight() {
+function initCustomCursor() {
+  const cursorDot = document.getElementById('cursorDot') || document.querySelector('.cursor-dot');
+  const cursorRing = document.getElementById('cursorRing') || document.querySelector('.cursor-ring');
   const spotlight = document.querySelector('.cursor-spotlight');
-  if (!spotlight || window.innerWidth < 1024) return;
+
+  // Skip on touch/pointer-coarse devices
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorRing) cursorRing.style.display = 'none';
+    return;
+  }
 
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
-  let currentX = mouseX;
-  let currentY = mouseY;
+  let ringX = mouseX;
+  let ringY = mouseY;
+  let spotX = mouseX;
+  let spotY = mouseY;
+  let isHovered = false;
 
   window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
+
+    if (cursorDot) {
+      cursorDot.style.opacity = '1';
+      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+    }
+    if (cursorRing) {
+      cursorRing.style.opacity = '1';
+    }
   });
 
-  function follow() {
-    currentX += (mouseX - currentX) * 0.12;
-    currentY += (mouseY - currentY) * 0.12;
-    spotlight.style.left = `${currentX}px`;
-    spotlight.style.top = `${currentY}px`;
-    requestAnimationFrame(follow);
+  window.addEventListener('mouseleave', () => {
+    if (cursorDot) cursorDot.style.opacity = '0';
+    if (cursorRing) cursorRing.style.opacity = '0';
+  });
+
+  window.addEventListener('mousedown', () => {
+    if (cursorRing) {
+      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(0.8)`;
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (cursorRing) {
+      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) ${isHovered ? 'scale(1.4)' : 'scale(1)'}`;
+    }
+  });
+
+  function renderCursorPhysics() {
+    ringX += (mouseX - ringX) * 0.16;
+    ringY += (mouseY - ringY) * 0.16;
+
+    if (cursorRing) {
+      cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) ${isHovered ? 'scale(1.4)' : 'scale(1)'}`;
+    }
+
+    if (spotlight) {
+      spotX += (mouseX - spotX) * 0.08;
+      spotY += (mouseY - spotY) * 0.08;
+      spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0) translate(-50%, -50%)`;
+    }
+
+    requestAnimationFrame(renderCursorPhysics);
   }
-  follow();
+  requestAnimationFrame(renderCursorPhysics);
+
+  // Dynamic interactive elements hover listener
+  const hoverSelectors = 'a, button, [role="button"], input, select, textarea, .category-pill, .size-btn, .vibe-card, .table-seat-node, .party-chip, .vibe-slot-card, .btn-stepper-plus, .btn-stepper-minus, .btn-add-tray, .lightbox-trigger, .mascot-badge-tag';
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverSelectors)) {
+      isHovered = true;
+      cursorRing?.classList.add('active');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverSelectors)) {
+      isHovered = false;
+      cursorRing?.classList.remove('active');
+    }
+  });
 }
 
 /* ==========================================================================
@@ -665,15 +727,62 @@ function initReservationSystem() {
     dateInput.value = today;
   }
 
+  let selectedTable = 'T-01 (Crimson Booth)';
   let selectedParty = '2 People';
   let selectedVibe = 'Hellfire Neon Lounge';
   let selectedTime = '07:00 PM';
+
+  // VIP Floor Plan & Table Selector Wiring
+  const tableNodes = document.querySelectorAll('.table-seat-node');
+  tableNodes.forEach(node => {
+    node.addEventListener('click', () => {
+      tableNodes.forEach(n => {
+        n.classList.remove('active');
+        const pill = n.querySelector('.seat-status-pill');
+        if (pill) pill.textContent = 'Available';
+      });
+      node.classList.add('active');
+      const pill = node.querySelector('.seat-status-pill');
+      if (pill) pill.textContent = 'Selected';
+
+      const tableCode = node.dataset.table || 'T-01';
+      const seatName = node.querySelector('.table-seat-name')?.textContent || 'VIP Seating';
+      selectedTable = `${tableCode} (${seatName})`;
+
+      // Auto-sync Party Chip if matched
+      const party = node.dataset.party;
+      if (party) {
+        partyChips.forEach(chip => {
+          if (chip.dataset.party === party) {
+            partyChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedParty = party;
+          }
+        });
+      }
+
+      // Auto-sync Vibe Slot if matched
+      const vibe = node.dataset.vibe;
+      if (vibe) {
+        vibeSlots.forEach(slot => {
+          if (slot.dataset.vibe === vibe) {
+            vibeSlots.forEach(s => s.classList.remove('active'));
+            slot.classList.add('active');
+            selectedVibe = vibe;
+          }
+        });
+      }
+
+      playAudioBeep(560, 0.08);
+    });
+  });
 
   partyChips.forEach(chip => {
     chip.addEventListener('click', () => {
       partyChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       selectedParty = chip.dataset.party;
+      playAudioBeep(480, 0.06);
     });
   });
 
@@ -682,6 +791,7 @@ function initReservationSystem() {
       vibeSlots.forEach(s => s.classList.remove('active'));
       slot.classList.add('active');
       selectedVibe = slot.dataset.vibe;
+      playAudioBeep(480, 0.06);
     });
   });
 
@@ -691,6 +801,7 @@ function initReservationSystem() {
       timeBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedTime = btn.dataset.time;
+      playAudioBeep(440, 0.05);
     });
   });
 
@@ -715,6 +826,8 @@ function initReservationSystem() {
 
       // Populate Modal Fields
       document.getElementById('ticketToken').textContent = token;
+      const ticketTableEl = document.getElementById('ticketTable');
+      if (ticketTableEl) ticketTableEl.textContent = selectedTable;
       document.getElementById('ticketName').textContent = name;
       document.getElementById('ticketParty').textContent = selectedParty;
       document.getElementById('ticketDateTime').textContent = `${date} at ${selectedTime}`;
@@ -723,6 +836,7 @@ function initReservationSystem() {
       // Prepare WhatsApp pre-filled link
       const waMsg = `🔥 *TABLE RESERVATION REQUEST - HELL HOUSE CAFE* 🔥\n\n` +
         `🎫 *Booking Code:* ${token}\n` +
+        `🪑 *Reserved Table:* ${selectedTable}\n` +
         `👤 *Name:* ${name}\n` +
         `📞 *Phone:* ${phone}\n` +
         `👥 *Party Size:* ${selectedParty}\n` +

@@ -23,10 +23,10 @@
   <meta property="og:description" content="Good Food • Good Mood • Great Vibes. Book tables online and explore our fiery artisan menu.">
   <meta property="og:image" content="assets/images/logo.jpg">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Syne (Luxury Modern), Cinzel (Haute Roman), Outfit & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800;900&family=Righteous&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -35,6 +35,13 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+  <!-- Luxury Cinematic Noise Grain Texture -->
+  <div class="luxury-grain-overlay" aria-hidden="true"></div>
+
+  <!-- Luxury Interactive Custom Cursor -->
+  <div class="luxury-cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="luxury-cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
   <!-- Background Animated Ember Canvas -->
   <canvas id="emberCanvas"></canvas>
@@ -111,50 +118,54 @@
     </div>
   </header>
 
-  <!-- HERO SECTION - THE ULTIMATE SHOWPIECE -->
+  <!-- HERO SECTION - THE HAUTE SHOWPIECE -->
   <section class="hero-section" id="hero">
     <div class="container hero-grid">
       <div class="hero-content">
-        <div class="hero-pill jump-badge-anim">
-          <i class="fa-solid fa-fire"></i>
-          <span>Unnao’s Trendiest Neon Lounge & Cafe</span>
+        <div class="hero-luxury-crest jump-badge-anim">
+          <span class="crest-diamond">◆</span>
+          <span>HAUTE GASTRONOMY & NEON HAVEN • EST. UNNAO</span>
+          <span class="crest-diamond">◆</span>
         </div>
 
         <h2 class="hero-title">
-          <span class="text-glitch">ENTER THE</span>
-          <span class="text-neon">HELL HOUSE</span>
-          <span class="text-amber">EXPERIENCE</span>
+          <span class="hero-overline">DISCOVER THE SANCTUARY</span>
+          <span class="hero-main-title">HELL <span class="text-luxury-glow">HOUSE</span></span>
+          <span class="hero-subline">HAUTE CAFE & CYBER LOUNGE</span>
         </h2>
 
         <p class="hero-subtitle">
-          Where blazing neon lights meet artisanal cravings. Savor cheesy hand-stretched pizzas, dripping burgers, sizzling starters, and crazy electric mocktails in an atmosphere built to flex.
+          Where artisanal gourmet mastery meets hypnotic neon ambiance. Hand-stretched fermented sourdough crusts, velvety garlic bechamel, and bespoke glowing mixology crafted for those who demand the extraordinary.
         </p>
 
         <div class="hero-cta-group">
-          <a href="#reservation" class="btn-primary-glow">
-            <i class="fa-solid fa-bolt"></i>
+          <a href="#reservation" class="btn-primary-glow luxury-gold-sweep">
+            <i class="fa-solid fa-crown"></i>
             <span>Reserve VIP Table</span>
           </a>
           <a href="#menu" class="btn-secondary-glow">
-            <i class="fa-solid fa-fire-burner"></i>
-            <span>Explore Fiery Menu</span>
+            <i class="fa-solid fa-utensils"></i>
+            <span>Explore Tasting Menu</span>
           </a>
         </div>
 
-        <!-- Real Cafe Highlights Strip -->
+        <!-- Real Cafe Highlights Strip with Gold Accents -->
         <div class="hero-stats-row">
           <div class="stat-item">
             <span class="stat-number">4.9 <span class="highlight">★</span></span>
-            <span class="stat-label">Hype Rating</span>
+            <span class="stat-label">Critics' Hype</span>
           </div>
+          <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-number">25<span class="highlight">+</span></span>
-            <span class="stat-label">Artisan Dishes</span>
+            <span class="stat-label">Artisan Recipes</span>
           </div>
+          <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-number">100<span class="highlight">%</span></span>
-            <span class="stat-label">Fresh & Pure Veg</span>
+            <span class="stat-label">Pure Veg Craft</span>
           </div>
+          <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-number">11 <span class="highlight">PM</span></span>
             <span class="stat-label">Late Night Vibe</span>
@@ -364,6 +375,42 @@
       <div class="reservation-card-main">
         <form id="tableBookingForm">
           <div class="reservation-form-grid">
+            <!-- Live VIP Floor Plan & Table Selector (Interactive Haute Experience) -->
+            <div class="form-field-group" style="grid-column: 1 / -1;">
+              <div class="floorplan-card-box">
+                <div class="floorplan-header">
+                  <span class="floorplan-title"><i class="fa-solid fa-compass"></i> LIVE VIP FLOOR PLAN & TABLE SELECTOR</span>
+                  <span class="floorplan-status"><span class="pulse-live"></span> Tables Open Tonight</span>
+                </div>
+                <div class="floorplan-grid" id="floorplanGrid">
+                  <div class="table-seat-node active" data-table="T-01" data-party="2 People" data-vibe="Hellfire Neon Lounge">
+                    <div class="table-badge-code">T-01</div>
+                    <div class="table-seat-name">Crimson Booth</div>
+                    <div class="table-seat-cap">2-4 Guests • Neon Wings</div>
+                    <span class="seat-status-pill">Selected</span>
+                  </div>
+                  <div class="table-seat-node" data-table="T-02" data-party="2 People" data-vibe="Cozy Corner Booth">
+                    <div class="table-badge-code">T-02</div>
+                    <div class="table-seat-name">Lovers' Alcove</div>
+                    <div class="table-seat-cap">2 Guests • Private Dim</div>
+                    <span class="seat-status-pill">Available</span>
+                  </div>
+                  <div class="table-seat-node" data-table="T-03" data-party="3-4 People" data-vibe="Squad Chill Pod">
+                    <div class="table-badge-code">T-03</div>
+                    <div class="table-seat-name">Squad Lounge</div>
+                    <div class="table-seat-cap">4-6 Guests • Games</div>
+                    <span class="seat-status-pill">Available</span>
+                  </div>
+                  <div class="table-seat-node" data-table="VIP-01" data-party="10+ VIP Bash" data-vibe="Birthday Celebration Hall">
+                    <div class="table-badge-code">VIP-01</div>
+                    <div class="table-seat-name">The Grand Hall</div>
+                    <div class="table-seat-cap">10+ Guests • Party Special</div>
+                    <span class="seat-status-pill">Available</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Party Size Selector -->
             <div class="form-field-group" style="grid-column: 1 / -1;">
               <label class="form-label">
@@ -494,6 +541,10 @@
         <div class="ticket-row">
           <span class="ticket-label">Booking Code:</span>
           <span class="ticket-val code" id="ticketToken">HHC-5829</span>
+        </div>
+        <div class="ticket-row">
+          <span class="ticket-label">Reserved Table:</span>
+          <span class="ticket-val" id="ticketTable" style="color: var(--gold-24k); font-weight: 700; font-family: var(--font-display);">T-01 (Crimson Booth)</span>
         </div>
         <div class="ticket-row">
           <span class="ticket-label">Guest Name:</span>
