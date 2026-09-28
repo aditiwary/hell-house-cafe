@@ -91,10 +91,10 @@ body {
 
 /* Luxury Interactive Custom Cursor */
 @media (hover: hover) and (pointer: fine) {
-  body {
+  html, body {
     cursor: none;
   }
-  a, button, [role="button"], input, select {
+  a, button, [role="button"], input, select, textarea {
     cursor: none !important;
   }
 }
@@ -103,44 +103,51 @@ body {
 .luxury-cursor-dot,
 #cursorDot {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 7px;
-  height: 7px;
-  background: var(--neon-red);
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background: #ff2a4b;
   border-radius: 50%;
   pointer-events: none;
   z-index: 999999;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s ease;
-  box-shadow: 0 0 10px var(--neon-red);
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 10px rgba(255, 42, 75, 0.9), 0 0 20px rgba(255, 42, 75, 0.4);
+}
+
+.cursor-dot.active {
+  background: var(--gold-24k);
+  box-shadow: 0 0 12px var(--gold-24k), 0 0 24px rgba(255, 215, 0, 0.5);
 }
 
 .cursor-ring,
 .luxury-cursor-ring,
 #cursorRing {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: -18px;
+  left: -18px;
   width: 36px;
   height: 36px;
-  border: 1.5px solid rgba(212, 175, 55, 0.65);
+  border: 1.5px solid rgba(255, 60, 90, 0.45);
   border-radius: 50%;
   pointer-events: none;
   z-index: 999998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s var(--spring-bounce), height 0.3s var(--spring-bounce), border-color 0.3s ease, background 0.3s ease;
-  box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 16px rgba(255, 30, 66, 0.2);
 }
 
 .cursor-ring.active,
 .luxury-cursor-ring.active,
 #cursorRing.active {
-  width: 58px;
-  height: 58px;
-  border-color: var(--neon-red);
-  background: rgba(255, 18, 61, 0.12);
-  box-shadow: 0 0 25px var(--neon-red-glow);
+  border-color: rgba(255, 42, 75, 0.85);
+  background: rgba(255, 30, 66, 0.08);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 0 25px rgba(255, 42, 75, 0.45), inset 0 0 12px rgba(255, 42, 75, 0.2);
 }
 
 /* Luxury Custom Scrollbar */
