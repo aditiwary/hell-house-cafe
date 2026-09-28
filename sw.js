@@ -1,17 +1,17 @@
-const CACHE_NAME = 'hell-house-cafe-v2.7';
+const CACHE_NAME = 'hell-house-cafe-v2.8';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/assets/css/style.css',
-  '/assets/js/menu-data.js',
-  '/assets/js/app.js',
-  '/assets/images/logo.jpg',
-  '/assets/images/owner.jpg',
-  '/assets/images/menu-board.jpg',
-  '/assets/images/menu-book.jpg',
-  '/assets/images/pizza-showcase.jpg',
-  '/assets/images/mocktail-showcase.jpg'
+  './',
+  './index.html',
+  './manifest.json',
+  './assets/css/style.css',
+  './assets/js/menu-data.js',
+  './assets/js/app.js',
+  './assets/images/logo.jpg',
+  './assets/images/owner.jpg',
+  './assets/images/menu-board.jpg',
+  './assets/images/menu-book.jpg',
+  './assets/images/pizza-showcase.jpg',
+  './assets/images/mocktail-showcase.jpg'
 ];
 
 // Install: Cache core application shell

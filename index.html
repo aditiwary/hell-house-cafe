@@ -23,6 +23,43 @@
   <meta property="og:description" content="Good Food • Good Mood • Great Vibes. Book tables online and explore our fiery artisan menu.">
   <meta property="og:image" content="assets/images/logo.jpg">
 
+  <!-- Schema.org Structured Data for Google Restaurant Search & Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Hell House Cafe",
+    "alternateName": "Hellfire Hidden House Cafe",
+    "image": "https://hell-house-cafe.vercel.app/assets/images/logo.jpg",
+    "url": "https://hell-house-cafe.vercel.app",
+    "telephone": "+918874056350",
+    "servesCuisine": ["Cafe", "Fast Food", "Italian", "Pizza", "Burgers", "Beverages"],
+    "priceRange": "₹₹",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Hiran Nagar",
+      "addressLocality": "Unnao",
+      "addressRegion": "Uttar Pradesh",
+      "postalCode": "209801",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 26.5471,
+      "longitude": 80.4908
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "11:00",
+        "closes": "23:00"
+      }
+    ],
+    "acceptsReservations": "True"
+  }
+  </script>
+
   <!-- Google Fonts: Syne (Luxury Modern), Cinzel (Haute Roman), Outfit & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +69,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.8">
 </head>
 <body>
 
@@ -644,7 +681,7 @@
       <i class="fa-solid fa-xmark"></i>
     </button>
     <div class="lightbox-img-wrapper">
-      <img src="" alt="Menu Full Preview" id="lightboxImg">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="Menu Full Preview" id="lightboxImg">
     </div>
   </div>
 
@@ -853,7 +890,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/menu-data.js?v=2.7"></script>
-  <script src="assets/js/app.js?v=2.7"></script>
+  <script src="assets/js/menu-data.js?v=2.8"></script>
+  <script src="assets/js/app.js?v=2.8"></script>
 </body>
 </html>

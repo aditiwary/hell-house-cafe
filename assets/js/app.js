@@ -4,7 +4,7 @@
  * Order Tray (WhatsApp Checkout), Table Reservation Flow, Web Audio FX, Lightbox
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initHellHouseApp() {
   registerServiceWorker();
   initPwaInstall();
   initEmberCanvas();
@@ -16,7 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initCardTilt();
   initSoundFx();
   initNavigation();
-});
+  initAccessibilityShortcuts();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHellHouseApp);
+} else {
+  initHellHouseApp();
+}
 
 /* ==========================================================================
    0. PWA REGISTRATION & INSTALLATION HANDLER
@@ -139,13 +146,16 @@ function initEmberCanvas() {
       }
     }
     draw() {
+      // 2-pass soft glow rendering (Zero shadowBlur rasterization overhead)
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+      ctx.fillStyle = `${this.colorBase}${this.opacity * 0.25})`;
+      ctx.fill();
+
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fillStyle = `${this.colorBase}${this.opacity})`;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = `${this.colorBase}0.8)`;
       ctx.fill();
-      ctx.shadowBlur = 0; // reset
     }
   }
 
@@ -163,11 +173,10 @@ function initEmberCanvas() {
     animationFrameId = requestAnimationFrame(animate);
   }
 
-  // Performance: Pause when tab is inactive
+  // Performance: Pause when tab is inactive & prevent duplicate RAF loops
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      cancelAnimationFrame(animationFrameId);
-    } else {
+    cancelAnimationFrame(animationFrameId);
+    if (!document.hidden) {
       animate();
     }
   });
@@ -643,7 +652,7 @@ window.changeCartQty = function(key, delta) {
 
 function dispatchWhatsAppOrder() {
   if (cart.length === 0) {
-    alert("Please add items to your tray before ordering!");
+    showLimitToast("🛒 Please add items to your tray before ordering!");
     return;
   }
 
@@ -726,7 +735,7 @@ function initReservationSystem() {
       const notes = document.getElementById('resNotes').value.trim() || 'No special request';
 
       if (!name || !phone) {
-        alert("Please enter your name and phone number to reserve your table!");
+        showLimitToast("⚠️ Please enter your name and phone number to reserve your table!");
         return;
       }
 
@@ -914,3 +923,18 @@ function initNavigation() {
     });
   });
 }
+
+/* ==========================================================================
+   10. ACCESSIBILITY: ESCAPE KEY DISMISSAL & GLOBAL MODAL HANDLING
+   ========================================================================== */
+function initAccessibilityShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      document.getElementById('bookingModal')?.classList.remove('active');
+      document.getElementById('lightboxModal')?.classList.remove('active');
+      document.getElementById('trayDrawer')?.classList.remove('active');
+      document.querySelector('.nav-links')?.classList.remove('active');
+    }
+  });
+}
+
