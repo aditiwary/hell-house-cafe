@@ -727,55 +727,9 @@ function initReservationSystem() {
     dateInput.value = today;
   }
 
-  let selectedTable = 'T-01 (Crimson Booth)';
   let selectedParty = '2 People';
   let selectedVibe = 'Hellfire Neon Lounge';
   let selectedTime = '07:00 PM';
-
-  // VIP Floor Plan & Table Selector Wiring
-  const tableNodes = document.querySelectorAll('.table-seat-node');
-  tableNodes.forEach(node => {
-    node.addEventListener('click', () => {
-      tableNodes.forEach(n => {
-        n.classList.remove('active');
-        const pill = n.querySelector('.seat-status-pill');
-        if (pill) pill.textContent = 'Available';
-      });
-      node.classList.add('active');
-      const pill = node.querySelector('.seat-status-pill');
-      if (pill) pill.textContent = 'Selected';
-
-      const tableCode = node.dataset.table || 'T-01';
-      const seatName = node.querySelector('.table-seat-name')?.textContent || 'VIP Seating';
-      selectedTable = `${tableCode} (${seatName})`;
-
-      // Auto-sync Party Chip if matched
-      const party = node.dataset.party;
-      if (party) {
-        partyChips.forEach(chip => {
-          if (chip.dataset.party === party) {
-            partyChips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            selectedParty = party;
-          }
-        });
-      }
-
-      // Auto-sync Vibe Slot if matched
-      const vibe = node.dataset.vibe;
-      if (vibe) {
-        vibeSlots.forEach(slot => {
-          if (slot.dataset.vibe === vibe) {
-            vibeSlots.forEach(s => s.classList.remove('active'));
-            slot.classList.add('active');
-            selectedVibe = vibe;
-          }
-        });
-      }
-
-      playAudioBeep(560, 0.08);
-    });
-  });
 
   partyChips.forEach(chip => {
     chip.addEventListener('click', () => {
@@ -826,8 +780,6 @@ function initReservationSystem() {
 
       // Populate Modal Fields
       document.getElementById('ticketToken').textContent = token;
-      const ticketTableEl = document.getElementById('ticketTable');
-      if (ticketTableEl) ticketTableEl.textContent = selectedTable;
       document.getElementById('ticketName').textContent = name;
       document.getElementById('ticketParty').textContent = selectedParty;
       document.getElementById('ticketDateTime').textContent = `${date} at ${selectedTime}`;
@@ -836,7 +788,6 @@ function initReservationSystem() {
       // Prepare WhatsApp pre-filled link
       const waMsg = `🔥 *TABLE RESERVATION REQUEST - HELL HOUSE CAFE* 🔥\n\n` +
         `🎫 *Booking Code:* ${token}\n` +
-        `🪑 *Reserved Table:* ${selectedTable}\n` +
         `👤 *Name:* ${name}\n` +
         `📞 *Phone:* ${phone}\n` +
         `👥 *Party Size:* ${selectedParty}\n` +

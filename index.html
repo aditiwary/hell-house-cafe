@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.3">
 </head>
 <body>
 
@@ -375,41 +375,6 @@
       <div class="reservation-card-main">
         <form id="tableBookingForm">
           <div class="reservation-form-grid">
-            <!-- Live VIP Floor Plan & Table Selector (Interactive Haute Experience) -->
-            <div class="form-field-group" style="grid-column: 1 / -1;">
-              <div class="floorplan-card-box">
-                <div class="floorplan-header">
-                  <span class="floorplan-title"><i class="fa-solid fa-compass"></i> LIVE VIP FLOOR PLAN & TABLE SELECTOR</span>
-                  <span class="floorplan-status"><span class="pulse-live"></span> Tables Open Tonight</span>
-                </div>
-                <div class="floorplan-grid" id="floorplanGrid">
-                  <div class="table-seat-node active" data-table="T-01" data-party="2 People" data-vibe="Hellfire Neon Lounge">
-                    <div class="table-badge-code">T-01</div>
-                    <div class="table-seat-name">Crimson Booth</div>
-                    <div class="table-seat-cap">2-4 Guests • Neon Wings</div>
-                    <span class="seat-status-pill">Selected</span>
-                  </div>
-                  <div class="table-seat-node" data-table="T-02" data-party="2 People" data-vibe="Cozy Corner Booth">
-                    <div class="table-badge-code">T-02</div>
-                    <div class="table-seat-name">Lovers' Alcove</div>
-                    <div class="table-seat-cap">2 Guests • Private Dim</div>
-                    <span class="seat-status-pill">Available</span>
-                  </div>
-                  <div class="table-seat-node" data-table="T-03" data-party="3-4 People" data-vibe="Squad Chill Pod">
-                    <div class="table-badge-code">T-03</div>
-                    <div class="table-seat-name">Squad Lounge</div>
-                    <div class="table-seat-cap">4-6 Guests • Games</div>
-                    <span class="seat-status-pill">Available</span>
-                  </div>
-                  <div class="table-seat-node" data-table="VIP-01" data-party="10+ VIP Bash" data-vibe="Birthday Celebration Hall">
-                    <div class="table-badge-code">VIP-01</div>
-                    <div class="table-seat-name">The Grand Hall</div>
-                    <div class="table-seat-cap">10+ Guests • Party Special</div>
-                    <span class="seat-status-pill">Available</span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <!-- Party Size Selector -->
             <div class="form-field-group" style="grid-column: 1 / -1;">
@@ -543,10 +508,6 @@
           <span class="ticket-val code" id="ticketToken">HHC-5829</span>
         </div>
         <div class="ticket-row">
-          <span class="ticket-label">Reserved Table:</span>
-          <span class="ticket-val" id="ticketTable" style="color: var(--gold-24k); font-weight: 700; font-family: var(--font-display);">T-01 (Crimson Booth)</span>
-        </div>
-        <div class="ticket-row">
           <span class="ticket-label">Guest Name:</span>
           <span class="ticket-val" id="ticketName">Aditya</span>
         </div>
@@ -667,21 +628,6 @@
           <div class="gallery-item-info">
             <h4 class="gallery-title">Official Cafe Brochure</h4>
             <p class="gallery-desc">The deluxe black & gold book menu with full appetizer, starter & beverage collections.</p>
-          </div>
-        </div>
-
-        <div class="gallery-item-card lightbox-trigger" data-fullsrc="assets/images/logo.jpg">
-          <div class="gallery-thumb-box">
-            <img src="assets/images/logo.jpg" alt="Hellfire Hidden House Emblem" loading="lazy">
-            <div class="gallery-zoom-overlay">
-              <div class="zoom-icon-badge">
-                <i class="fa-solid fa-magnifying-glass-plus"></i>
-              </div>
-            </div>
-          </div>
-          <div class="gallery-item-info">
-            <h4 class="gallery-title">The Devil Mascot Emblem</h4>
-            <p class="gallery-desc">The iconic Hellfire trident mascot — symbol of Unnao’s boldest flavors.</p>
           </div>
         </div>
       </div>
@@ -903,7 +849,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/menu-data.js"></script>
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/menu-data.js?v=2.3"></script>
+  <script src="assets/js/app.js?v=2.3"></script>
 </body>
 </html>
