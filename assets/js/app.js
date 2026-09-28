@@ -5,6 +5,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  registerServiceWorker();
+  initPwaInstall();
   initEmberCanvas();
   initCursorSpotlight();
   initMenuSystem();
@@ -17,11 +19,75 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. EMBER & NEON SPARKS PARTICLE CANVAS
+   0. PWA REGISTRATION & INSTALLATION HANDLER
+   ========================================================================== */
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {
+        // Safe fallback in restricted environments
+      });
+    });
+  }
+}
+
+let deferredPwaPrompt = null;
+function initPwaInstall() {
+  const installBtn = document.getElementById('installAppBtn');
+  const mobileInstallBtn = document.getElementById('mobileInstallBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    if (installBtn) installBtn.style.display = 'inline-flex';
+    if (mobileInstallBtn) mobileInstallBtn.style.display = 'inline-flex';
+  });
+
+  function triggerPwaInstall() {
+    if (deferredPwaPrompt) {
+      deferredPwaPrompt.prompt();
+      deferredPwaPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') {
+          if (installBtn) installBtn.style.display = 'none';
+          if (mobileInstallBtn) mobileInstallBtn.style.display = 'none';
+        }
+        deferredPwaPrompt = null;
+      });
+    } else {
+      // iOS / Safari / unsupported browser guidance
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIos) {
+        showLimitToast("📱 Tap Share (bottom bar) > 'Add to Home Screen'");
+      } else {
+        showLimitToast("📲 App is ready! Open browser menu > 'Install App' or 'Add to Home Screen'");
+      }
+    }
+  }
+
+  installBtn?.addEventListener('click', triggerPwaInstall);
+  mobileInstallBtn?.addEventListener('click', triggerPwaInstall);
+
+  window.addEventListener('appinstalled', () => {
+    if (installBtn) installBtn.style.display = 'none';
+    if (mobileInstallBtn) mobileInstallBtn.style.display = 'none';
+    deferredPwaPrompt = null;
+    showLimitToast("🎉 Hell House Cafe App installed successfully!");
+  });
+}
+
+/* ==========================================================================
+   1. EMBER & NEON SPARKS PARTICLE CANVAS (ADAPTIVE & BATTERY FRIENDLY)
    ========================================================================== */
 function initEmberCanvas() {
   const canvas = document.getElementById('emberCanvas');
   if (!canvas) return;
+
+  // Respect battery & accessibility preferences
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.style.display = 'none';
+    return;
+  }
+
   const ctx = canvas.getContext('2d');
 
   let width = (canvas.width = window.innerWidth);
@@ -33,7 +99,14 @@ function initEmberCanvas() {
   });
 
   const particles = [];
-  const particleCount = window.innerWidth < 768 ? 35 : 75;
+  // Lightweight adaptive particle count based on device capability
+  let particleCount = 20;
+  if (window.innerWidth >= 1024) {
+    particleCount = 55;
+  } else if (window.innerWidth >= 768) {
+    particleCount = 35;
+  }
+
   const colors = [
     'rgba(255, 30, 66, ',    // Neon red
     'rgba(255, 153, 0, ',   // Neon amber

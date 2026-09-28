@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Hell House Cafe | The Ultimate Showpiece Cafe & Lounge • Unnao</title>
   
+  <!-- PWA & Device Compatibility -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff1e42">
+  <link rel="apple-touch-icon" href="assets/images/logo.jpg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hell House Cafe">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+
   <!-- SEO & Meta -->
   <meta name="description" content="Hell House Cafe (Hellfire Hidden House) in Hiran Nagar, Unnao. Experience electrifying neon vibes, artisan pizzas, cheesy burgers, exotic mocktails & reserve VIP tables online.">
   <meta name="keywords" content="Hell House Cafe, Hellfire Hidden House, Unnao Cafe, Hiran Nagar Cafe, Unnao Restaurant, Pizza in Unnao, Table Booking Unnao">
@@ -69,6 +80,12 @@
 
       <!-- Header Action Items -->
       <div class="nav-actions">
+        <!-- PWA Install Button (Auto-detected on Android/Chrome/Windows/Edge) -->
+        <button id="installAppBtn" class="btn-install-app" title="Install Hell House Cafe App" style="display: none;" aria-label="Install App">
+          <i class="fa-solid fa-download"></i>
+          <span>Install App</span>
+        </button>
+
         <!-- Audio Ambience Synth Toggle -->
         <button id="soundToggleBtn" class="btn-sound-toggle" title="Toggle Fiery Ambience Audio" aria-label="Toggle sound ambience">
           <i class="fa-solid fa-volume-xmark"></i>
@@ -819,9 +836,12 @@
     </div>
   </footer>
 
-  <!-- MOBILE STICKY QUICK ACTION BAR -->
+  <!-- MOBILE STICKY QUICK ACTION BAR (ENHANCED FOR ALL PHONES & TABLETS) -->
   <div class="mobile-sticky-bar">
     <div class="mobile-action-flex">
+      <button id="mobileInstallBtn" class="mobile-btn install" style="display: none;" aria-label="Install App to Home Screen">
+        <i class="fa-solid fa-download"></i> Install App
+      </button>
       <a href="#reservation" class="mobile-btn book">
         <i class="fa-solid fa-calendar-check"></i> Book Table
       </a>
