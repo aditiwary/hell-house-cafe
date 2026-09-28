@@ -176,132 +176,48 @@ function initEmberCanvas() {
 }
 
 /* ==========================================================================
-   2. HAUTE CUSTOM CURSOR & CURSOR SPOTLIGHT TRACKING
+   2. AMBIENT BACKGROUND SPOTLIGHT (NORMAL NATIVE OS CURSOR RESTORED)
    ========================================================================== */
 function initCustomCursor() {
-  const cursorDot = document.getElementById('cursorDot') || document.querySelector('.cursor-dot');
-  const cursorRing = document.getElementById('cursorRing') || document.querySelector('.cursor-ring');
   const spotlight = document.querySelector('.cursor-spotlight');
+  if (!spotlight) return;
 
-  // Disable on touch/pointer-coarse devices
+  // Skip on touch/pointer-coarse devices
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    if (cursorDot) cursorDot.style.display = 'none';
-    if (cursorRing) cursorRing.style.display = 'none';
+    spotlight.style.display = 'none';
     return;
   }
 
-  let mouseX = -100;
-  let mouseY = -100;
-  let dotX = -100;
-  let dotY = -100;
-  let ringX = -100;
-  let ringY = -100;
-  let spotX = -100;
-  let spotY = -100;
-
-  let isHovered = false;
-  let isClicking = false;
-  let isVisible = false;
-
-  let currentScale = 1;
-  let targetScale = 1;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let spotX = mouseX;
+  let spotY = mouseY;
+  let isMoving = false;
 
   window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-
-    if (!isVisible) {
-      isVisible = true;
-      dotX = mouseX;
-      dotY = mouseY;
-      ringX = mouseX;
-      ringY = mouseY;
-      if (cursorDot) cursorDot.style.opacity = '1';
-      if (cursorRing) cursorRing.style.opacity = '1';
+    if (!isMoving) {
+      isMoving = true;
+      spotlight.style.opacity = '1';
     }
   }, { passive: true });
 
   document.addEventListener('mouseleave', () => {
-    isVisible = false;
-    if (cursorDot) cursorDot.style.opacity = '0';
-    if (cursorRing) cursorRing.style.opacity = '0';
+    spotlight.style.opacity = '0';
   });
 
   document.addEventListener('mouseenter', () => {
-    isVisible = true;
-    if (cursorDot) cursorDot.style.opacity = '1';
-    if (cursorRing) cursorRing.style.opacity = '1';
+    spotlight.style.opacity = '1';
   });
 
-  window.addEventListener('mousedown', () => {
-    isClicking = true;
-  });
-
-  window.addEventListener('mouseup', () => {
-    isClicking = false;
-  });
-
-  // Buttery-smooth hardware-accelerated RAF render loop
-  function renderCursorPhysics() {
-    if (isVisible) {
-      // Dot follows directly with ultra-high responsiveness (zero drag lag)
-      dotX += (mouseX - dotX) * 0.75;
-      dotY += (mouseY - dotY) * 0.75;
-
-      // Outer aura ring follows with silky smooth fluid trailing
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-
-      // Determine continuous target scale
-      if (isClicking) {
-        targetScale = isHovered ? 1.25 : 0.75;
-      } else if (isHovered) {
-        targetScale = 1.55;
-      } else {
-        targetScale = 1;
-      }
-
-      // Smoothly interpolate currentScale (LERP)
-      currentScale += (targetScale - currentScale) * 0.2;
-
-      if (cursorDot) {
-        const dotScale = isHovered ? 0.5 : 1;
-        cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) scale(${dotScale})`;
-      }
-
-      if (cursorRing) {
-        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(${currentScale.toFixed(3)})`;
-      }
-
-      if (spotlight) {
-        spotX += (mouseX - spotX) * 0.08;
-        spotY += (mouseY - spotY) * 0.08;
-        spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0) translate(-50%, -50%)`;
-      }
-    }
-
-    requestAnimationFrame(renderCursorPhysics);
+  function renderSpotlight() {
+    spotX += (mouseX - spotX) * 0.1;
+    spotY += (mouseY - spotY) * 0.1;
+    spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(renderSpotlight);
   }
-  requestAnimationFrame(renderCursorPhysics);
-
-  // Dynamic interactive elements hover listener
-  const hoverSelectors = 'a, button, [role="button"], input, select, textarea, .category-pill, .size-btn, .vibe-card, .party-chip, .vibe-slot-card, .btn-stepper-plus, .btn-stepper-minus, .btn-add-tray, .lightbox-trigger, .gallery-item-card, .time-slot-btn, .nav-icon-btn, .social-link-btn';
-
-  document.addEventListener('mouseover', (e) => {
-    if (e.target.closest(hoverSelectors)) {
-      isHovered = true;
-      cursorRing?.classList.add('active');
-      cursorDot?.classList.add('active');
-    }
-  });
-
-  document.addEventListener('mouseout', (e) => {
-    if (e.target.closest(hoverSelectors)) {
-      isHovered = false;
-      cursorRing?.classList.remove('active');
-      cursorDot?.classList.remove('active');
-    }
-  });
+  requestAnimationFrame(renderSpotlight);
 }
 
 /* ==========================================================================
