@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hell-house-cafe-v2.3';
+const CACHE_NAME = 'hell-house-cafe-v2.4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -16,14 +16,15 @@ const STATIC_ASSETS = [
 
 // Install: Cache core application shell
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activate: Clean up old caches
+// Activate: Clean up old caches immediately and claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -38,31 +39,44 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Stale-While-Revalidate strategy for lightning-fast loads
+// Fetch: Network-First for HTML navigation so updates are instant; Stale-While-Revalidate for static assets
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // For same-origin requests
-  if (url.origin === self.location.origin) {
+  // Navigation requests (HTML pages): Network-First with Cache fallback
+  if (event.request.mode === 'navigate' || event.request.destination === 'document' || url.pathname === '/' || url.pathname.endsWith('.html')) {
     event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((cachedResponse) => {
-          const fetchPromise = fetch(event.request).then((networkResponse) => {
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // Static Assets (CSS, JS, Images, Fonts): Stale-While-Revalidate
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request)
+          .then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
               cache.put(event.request, networkResponse.clone());
             }
             return networkResponse;
-          }).catch(() => {
-            // Offline fallback
-            return cachedResponse;
-          });
+          })
+          .catch(() => cachedResponse);
 
-          return cachedResponse || fetchPromise;
-        });
-      })
-    );
-  }
+        return cachedResponse || fetchPromise;
+      });
+    })
+  );
 });
